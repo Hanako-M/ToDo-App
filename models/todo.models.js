@@ -10,7 +10,7 @@ const todoschema=new Schema({
         type:String
     },
     status:{
-        type:boolean,
+        type:Boolean,
         default:false
     },
     userId:{
@@ -19,5 +19,5 @@ const todoschema=new Schema({
         required:true
     }
 })
-const todos=mongoose.model('todos',todoshema)
-module.exports={todos}
+const todos=mongoose.model('todos',todoschema)
+module.exports=todos
