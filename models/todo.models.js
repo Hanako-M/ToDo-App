@@ -11,7 +11,7 @@ const todoschema=new Schema({
     },
     status:{
         type:Boolean,
-        default:false
+        default:false,
     },
     userId:{
         type:Schema.Types.ObjectId,

@@ -6,12 +6,13 @@ const checkAuth=(req,res,next)=>{
 
     //check the token exists and is verified
     if (token){
-    jwt.verify(token,'secret hana',(err,decodedtoken)=>{
+    jwt.verify(token,process.env.JWT_SECRET,(err,decodedtoken)=>{
      if(err){
         console.log(err.message);
         res.redirect('/signin');
      }else{
          console.log('perfect you are all good to go!!',decodedtoken);
+         req.userId=decodedtoken.id;
       next();
      }
     })

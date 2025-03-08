@@ -18,7 +18,7 @@ return error;
 
 //creating tokens
 const createtoken=(id)=>{
-  return jwt.sign({id},'secret hana',{expiresIn:60*60*24}/*1 day*/);
+  return jwt.sign({id},process.env.JWT_SECRET,{expiresIn:60*60*24}/*1 day*/);
 }
 
 const signUp= async(req,res)=>{
@@ -83,13 +83,12 @@ const signIn=async(req,res)=>{
 }
 
 const signOut=async(req,res)=>{
-    try{
-        const user= await User.create({username,email,password})
-      }
-      catch(err){
-  
-      }
-    }
+   res.cookie('jwt','',{maxAge:2}); //now take the cookie as a response and set it to empty
+    res.status(200).send({
+      "success": true,
+      "message": "User signed out successfully"
+    })
+  }
 module.exports={
 signUp,
 signIn,
