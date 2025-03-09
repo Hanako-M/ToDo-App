@@ -1,5 +1,5 @@
 const express=require("express");
-const Users = require("../models/users.modules.js");
+const Users = require("../models/users.models.js");
 const todos = require("../models/todo.models.js");
 const getTodos=async(req,res)=>{
    const userid=req.params.id;

@@ -1,8 +1,8 @@
-const jwt=require('jsonwebtoken');
-//const users=require('../models/User');
+const jwt=require("jsonwebtoken");
+const Users=require('../models/users.models.js');
 const checkAuth=(req,res,next)=>{
 
-    const token=req.cookies.jwt;  //get the token from the cookies
+    const token=req.cookies.token;  //get the token from the cookies
 
     //check the token exists and is verified
     if (token){
@@ -29,7 +29,7 @@ const checkAuth=(req,res,next)=>{
 
 const checkUser = async (req, res, next) => {
     const token = req.cookies.jwt;
-
+    console.log(req.cookies.jwt,"ya hana this is the token");
     if (!token) {
         req.user = null;
         res.locals.user = null;
@@ -38,7 +38,7 @@ const checkUser = async (req, res, next) => {
 
     try {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        const user = await User.findById(decodedToken.id);
+        const user = await Users.findById(decodedToken.id);
 
         if (!user) {
             req.user = null;
@@ -57,4 +57,4 @@ const checkUser = async (req, res, next) => {
     }
 };
 
-module.exports = { checkUser ,checkAuth};
+module.exports = { checkAuth ,checkUser};

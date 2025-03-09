@@ -3,9 +3,12 @@ const User=require('../models/users.models.js');
 const todos=require('../models/todo.models.js');
 const addTodo = async (req, res) => {
     const { title, description, status } = req.body;
+    console.log("console.log() req.user", req.user);
     const user = req.user;
-
+    
     if (!user) {
+        console.log("console.error() User not found");
+        
         return res.status(404).send("User not found");
     }
 
@@ -26,7 +29,6 @@ const addTodo = async (req, res) => {
         todo: newTodo,
     });
 };
-
 
 const changeStatus=async(req,res)=>{
     const {id}=req.params;
@@ -79,8 +81,7 @@ const getbyid=async(req,res)=>{
 }
 
 
-
-module.exports={
+module.exports= {
     addTodo,
     deleteTodo,
     getbyid,

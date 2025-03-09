@@ -83,12 +83,21 @@ const signIn=async(req,res)=>{
 }
 
 const signOut=async(req,res)=>{
-   res.cookie('jwt','',{maxAge:2}); //now take the cookie as a response and set it to empty
+  try{   
+    res.cookie('jwt','',{maxAge:2}); //now take the cookie as a response and set it to empty
     res.status(200).send({
       "success": true,
       "message": "User signed out successfully"
     })
+  }catch(err){
+    res.status(406).send({
+      "success": false,
+      "message": "an error occured"
+    })
   }
+  }
+
+
 module.exports={
 signUp,
 signIn,

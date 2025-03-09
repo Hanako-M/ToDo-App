@@ -1,11 +1,11 @@
 const {Router} = require("express")
-const checkAuth= require('../middlewares/auth.mid.js');
+const {checkUser}= require('../middlewares/auth.mid.js');
 const controller = require('../controllers/todos.cont.js');
 const router = Router()
-router.post('/add-todo',checkAuth,controller.addTodo);
-router.put('/change-status/:id',checkAuth,controller.changeStatus);
-router.delete('/delete-todo/:id', checkAuth,controller.deleteTodo);
-router.get('/getbyid/:id', checkAuth,controller.getbyid);
+router.post('/add-todo', checkUser,controller.addTodo);
+router.put('/change-status/:id',checkUser,controller.changeStatus);
+router.delete('/delete-todo/:id',checkUser, controller.deleteTodo);
+router.get('/getbyid/:id', checkUser,controller.getbyid);
 
 
 module.exports = router;

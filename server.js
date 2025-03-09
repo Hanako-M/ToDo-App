@@ -6,7 +6,7 @@ const user_router=require("./routers/user.routes.js")
 // let todos=require("./models/todo.models.js")
 // let users=require("./models/users.models.js")
 const auth_router = require("./routers/auth.routes.js")
-const checkUser=require("./middlewares/auth.mid.js")
+const {checkUser}=require("./middlewares/auth.mid.js")
 const mongoose=require("mongoose")
 const app=express()
 const port=3000
@@ -22,8 +22,8 @@ app.get('*',checkUser);
      connectDB().then(()=>{
         
        app.use("/",auth_router);
-       app.use("/todos",todo_router);
-       app.use("/users",user_router);
+       app.use("/",todo_router);
+       app.use("/",user_router);
       
        app.listen(port,async()=>{ console.log(`server is running successfully, Hana!`)})
     }).catch(err => {
