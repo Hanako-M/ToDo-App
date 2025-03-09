@@ -1,9 +1,9 @@
 const express=require("express");
 const Users = require("../models/users.modules.js");
-
+const todos = require("../models/todo.models.js");
 const getTodos=async(req,res)=>{
    const userid=req.params.id;
-   const user=await users.findById(userid).populate("todos").select("todos");
+   const user=await Users.findById(userid).populate("todos").select("todos");
    if(!user){
        return res.status(404).send("User not found")
    }

@@ -1,9 +1,12 @@
 const express=require("express")
 const dotenv=require("dotenv")
 let connectDB=require("./config/connectDB.js")
-let todos=require("./models/todo.models.js")
-let users=require("./models/users.models.js")
+const todo_router=require("./routers/todo.routes.js")
+const user_router=require("./routers/user.routes.js")
+// let todos=require("./models/todo.models.js")
+// let users=require("./models/users.models.js")
 const auth_router = require("./routers/auth.routes.js")
+const checkUser=require("./middlewares/auth.mid.js")
 const mongoose=require("mongoose")
 const app=express()
 const port=3000
@@ -14,28 +17,16 @@ dotenv.config();//load env variables
 //middlewares 
 app.use(express.json())
 
+app.get('*',checkUser);
 
-
-app.listen(port,async()=>{
-    try{
-       await connectDB();
-        // const newTodo = new todos({
-        //     title: "Learn Node.js",
-        //     description: "Build a CRUD API",
-        //     status: false,
-        //     userId: new mongoose.Types.ObjectId()  // Dummy ObjectId for testing
-        // });
-      
-        // newTodo.save()
-        //     .then(() => console.log("Todo saved!"))
-        //     .catch(err => console.log("Error:", err));
+     connectDB().then(()=>{
+        
        app.use("/",auth_router);
-   
-       console.log(`server is running successfully, Hana!`)
-    
-    }catch(err){
-        console.log(`ERROR`)
-        console.error(err)
-    }
-    
-})
+       app.use("/todos",todo_router);
+       app.use("/users",user_router);
+      
+       app.listen(port,async()=>{ console.log(`server is running successfully, Hana!`)})
+    }).catch(err => {
+        console.error("❌ ERROR: Database connection failed");
+        console.error(err);
+    });
