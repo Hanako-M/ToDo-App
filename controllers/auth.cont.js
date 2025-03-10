@@ -32,7 +32,7 @@ const signUp= async(req,res)=>{
     }
     catch(err){
         const errors=handleErrors(err);
-        res.json({errors});
+        res.json({"error":"ooo"});
     }
     res.send({
         "success": true,
@@ -61,7 +61,7 @@ const signIn=async(req,res)=>{
          }else{
             res.status(406).send({
                 "success": false,
-                "message": "incorrect email/password"
+                "message": "incorrect auth email/password"
             })
          }
         }else{
