@@ -2,32 +2,29 @@ const jwt = require('jsonwebtoken');
 const Users = require('../models/users.models.js');
 
 const checkUser = async (req, res, next) => {
-    try {
-        const token = req.cookies.jwt; // Get token from cookies
-        if (!token) {
-            return res.status(401).json({ error: "Unauthorized - No token provided" });
-        }
-        // Verify the token
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        console.log('Token verified:', decodedToken);
-
-        // Find user in database
-        const user = await Users.findById(decodedToken.id);
-        if (!user) {
-            return res.status(401).json({ error: "Unauthorized - User not found" });
-        }
-
-        // Attach user to request
-        req.userId = decodedToken.id;
-        req.user = user;  // ✅ Now user is defined
-
-        next();
-    } catch (error) {
-        console.error("Authentication Error:", error.message);
-        return res.status(401).json({ error: "Unauthorized - Invalid token" });
+    const token = req.cookies.token;
+    console.log(token);
+    if (!token)
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized - no token provided" });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded)
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized - invalid token" });
+  
+    req.userId = decoded.id;
+    // Check if the user exists
+    const user = await Users.findById(req.userId).select("password");
+    console.log(user);
+    if (!user) {
+      return res.status(404).json({ status: 404, message: "User not found" });
     }
-};
-
+  
+    req.user = user; // Attach the user to the request
+    next();
+  };
 
 //check current user
 //const jwt = require("jsonwebtoken");

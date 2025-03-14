@@ -15,6 +15,9 @@ const userschema=new Schema({
 
 userschema.pre('save',function(next){
     //const salt=bcrypt.genSalt();//salt to put in the begining of the password
+    if (!this.isModified("password")) {
+        return next();
+    }
     this.password=bcrypt.hashSync(this.password,10);//hash the password + the salt
     next();
 })

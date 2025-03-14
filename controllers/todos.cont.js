@@ -18,7 +18,9 @@ const addTodo = async (req, res) => {
         status,
         userId: user._id,
     });
-
+    if (!user.todos) {
+        user.todos = [];
+      }
     await newTodo.save();
     user.todos.push(newTodo._id);
     await user.save();
@@ -64,22 +66,22 @@ const deleteTodo=async(req,res)=>{
         message:"Todo deleted successfully"
     })
 }
-const getbyid=async(req,res)=>{
-    const {id}=req.params;
-    const user=req.user;
-    const todo=await todos.findById(id);
-    if(!todo){
-        return res.status(404).send("Todo not found")
+const getbyid = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const todo = await todos.findOne({ id });
+      if(todo.userId!=req.userId){
+        return res
+          .status(403)
+          .json({ success: false, message: "Unauthorized - Access denied" });
+      }
+  
+      res.json({ success: true, todo });
+    } catch (err) {
+      res.status(500).json({ success: false, message: "Server error" });
     }
-    // if(todo.userId.toString()!==user._id.toString()){
-    //     return res.status(401).send("You are not authorized to perform this action")
-    // }
-    res.status(200).send({
-        success:true,
-        todo:todo
-    })
-}
-
+  };
+  
 
 module.exports= {
     addTodo,
