@@ -25,9 +25,15 @@ const signUp= async(req,res)=>{
     const{username,email,password}=req.body;
     console.log(username,email,password);
     try{
-      const user= await User.create({username,email,password});
-      const token=createtoken(user._id);
-      res.cookie('jwt',token,{httpOnly:true,maxAge:60*60*24*1000});
+      // const user= await User.create({username,email,password});
+      const newUser = new User({
+        username,
+        email,
+        password
+      });
+      await newUser.save();
+      // const token=createtoken(user._id);
+      // res.cookie("token",token,{httpOnly:true,maxAge:60*60*24*1000});
     //   res.send({token});
     }
     catch(err){
@@ -45,11 +51,13 @@ const signIn=async(req,res)=>{
     const {email,password}=req.body;
     try{
         const found=  await User.findOne({email});
+        console.log(found);
         if(found){
          const auth = bcrypt.compareSync(password, found.password);
+         console.log(found.password);
          if(auth){
             const token=createtoken(found._id);
-            res.cookie('jwt',token,{httpOnly:true,maxAge:60*60*24*1000});
+            res.cookie("token",token,{httpOnly:true,maxAge:60*60*24*1000});
             res.status(200).send({
               "success": true,
               "user":{
@@ -83,20 +91,13 @@ const signIn=async(req,res)=>{
 }
 
 const signOut=async(req,res)=>{
-  try{   
-    res.cookie('jwt','',{maxAge:2}); //now take the cookie as a response and set it to empty
+   
+    res.cookie("token","",{maxAge:2}); //now take the cookie as a response and set it to empty
     res.status(200).send({
       "success": true,
       "message": "User signed out successfully"
     })
-  }catch(err){
-    res.status(406).send({
-      "success": false,
-      "message": "an error occured"
-    })
   }
-  }
-
 
 module.exports={
 signUp,
